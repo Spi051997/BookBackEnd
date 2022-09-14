@@ -58,25 +58,58 @@ const bookGetData = asyncHandler(async (req, res) => {
 // Serach record
 
 const Searchrecord = asyncHandler(async (req, res) => {
-  const bname = req.query.bookname?{
+  const bname = req.query.bookname
+    ? {
+        $or: [{ Book_Name: { $regex: req.query.bookname } }],
+      }
+    : {};
 
-    $or: [{ Book_Name: { $regex: req.query.bookname} },]
-  }:{};
-
-   console.log({bname:req.query.bookname})
+  console.log({ bname: req.query.bookname });
 
   const findname = await BookSchema.find(bname);
-  console.log(findname)
-    
+  console.log(findname);
 
-   res.send(findname)
+  res.send(findname);
 });
 
+// ** Update the Book Prrice
 
-const Testroute=asyncHandler(async(req,res)=>{
+const Updaterecord = asyncHandler(async (req, res) => {
+  const bookname = req.body.name;
+  console.log(bookname);
 
-     const vari=req.query.name;
-     const age=req.query.age
-     res.send({name:vari,age:vari});
+  const updaterecors = await BookSchema.updateOne(
+    {
+      Book_Name: bookname,
+    },
+    {
+      $set: req.body,
+    }
+
+
+  );
+
+  if(updaterecors)
+  {
+    res.status(200).json(updaterecors);
+  }
+  else{
+    res.status(400);
+    throw new Error("Update failed")
+  }
+   
+})
+ 
+
+const Testroute = asyncHandler(async (req, res) => {
+  const vari = req.query.name;
+  const age = req.query.age;
+  res.send({ name: vari, age: vari });
 });
-module.exports = { bookregistraion, bookGetData, Searchrecord,Testroute };
+module.exports = {
+  bookregistraion,
+  bookGetData,
+  Searchrecord,
+  Testroute,
+  Updaterecord,
+};
