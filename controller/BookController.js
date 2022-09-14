@@ -1,7 +1,9 @@
 const asyncHandler = require("express-async-handler");
 const { default: mongoose } = require("mongoose");
+// const mongodb=require('')
 const { find } = require("../model/bookmodel");
 const BookSchema = require("../model/bookmodel");
+
 
 // ** Insert Reord **
 const bookregistraion = asyncHandler(async (req, res) => {
@@ -89,17 +91,43 @@ const Updaterecord = asyncHandler(async (req, res) => {
 
   );
 
-  if(updaterecors)
-  {
+  if (updaterecors) {
     res.status(200).json(updaterecors);
-  }
-  else{
+  } else {
     res.status(400);
-    throw new Error("Update failed")
+    throw new Error("Update failed");
   }
+});
+
+//** Delete the  book record */
+
+const Deleterecord=asyncHandler(async(req,res)=>{
+
+   const del=req.body.id;
+   console.log(del)
    
+   const recdelete=await BookSchema.findByIdAndDelete({_id:del});
+
+   try{
+     if(recdelete)
+     
+      console.log(recdelete)
+      res.status(200).send("Sucessul");
+      console.log(recdelete);
+   }
+   catch(error)
+   {
+    res.status(401);
+    throw new Error(`Id has already deleted ${error}`);
+
+   } 
+
+  // if(!recdelete)
+  // {
+  //   res.status(400);
+  //   throw new Error(`Id has already deleted`);
+  // }
 })
- 
 
 const Testroute = asyncHandler(async (req, res) => {
   const vari = req.query.name;
@@ -112,4 +140,5 @@ module.exports = {
   Searchrecord,
   Testroute,
   Updaterecord,
+  Deleterecord
 };
