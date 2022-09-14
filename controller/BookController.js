@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { default: mongoose } = require("mongoose");
+const { find } = require("../model/bookmodel");
 const BookSchema = require("../model/bookmodel");
 
 // ** Insert Reord **
@@ -57,13 +58,25 @@ const bookGetData = asyncHandler(async (req, res) => {
 // Serach record
 
 const Searchrecord = asyncHandler(async (req, res) => {
-  const bname = req.params.name;
+  const bname = req.query.bookname?{
 
-  const findname = await BookSchema.find({
-    $or: [{ Book_Name: { $regex: bname } },  { Author_Name: { $regex: bname } }],
-  });
+    $or: [{ Book_Name: { $regex: req.query.bookname} },]
+  }:{};
 
-  res.status(200).json(findname);
+   console.log({bname:req.query.bookname})
+
+  const findname = await BookSchema.find(bname);
+  console.log(findname)
+    
+
+   res.send(findname)
 });
 
-module.exports = { bookregistraion, bookGetData, Searchrecord };
+
+const Testroute=asyncHandler(async(req,res)=>{
+
+     const vari=req.query.name;
+     const age=req.query.age
+     res.send({name:vari,age:vari});
+});
+module.exports = { bookregistraion, bookGetData, Searchrecord,Testroute };
