@@ -122,11 +122,7 @@ const Deleterecord=asyncHandler(async(req,res)=>{
 
    } 
 
-  // if(!recdelete)
-  // {
-  //   res.status(400);
-  //   throw new Error(`Id has already deleted`);
-  // }
+
 })
 
 const Testroute = asyncHandler(async (req, res) => {
